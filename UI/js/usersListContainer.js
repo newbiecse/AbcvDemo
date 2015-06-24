@@ -2,21 +2,27 @@ $(document).ready(function(){
 	// doms
 	$userList = $("#userList");
 	$userForm = $("#userForm");	
+	$userDeleteForm = $("#userDeleteForm");
 	
 	// get list user
 	renderListUsers($userList);
 	
-	// handle 4 add
+	// handle 4 add button
 	$("#btn-add").on("click", function(){
 		clearValue4Form($userForm);
 	});
 	
-	// handle 4 edit
+	// handle 4 edit button
 	$userList.find(".btn-edit").on("click", function(){
-		var userId = $(this).attr("data-userId");
+		var userId = $(this).closest("tr").attr("data-userId");
 		renderValue4UserForm(userId, $userForm);
 	});
 	
+	// handle 4 delete button
+	$userList.find(".btn-delete").on("click", function(){
+		var userId = $(this).closest("tr").attr("data-userId");
+		renderValue4UserDeleteForm(userId, $userDeleteForm);
+	});	
 	
 	// handle 4 hide modal
 	$("#userFormModal").on('hidden.bs.modal', function () {
@@ -33,8 +39,8 @@ $(document).ready(function(){
 */
 function getUsers() {
 	var listUsers = new Array();
-	var user1 = {username: "user1", email: "user1@abcv.com", fullname: "A1"};
-	var user2 = {username: "user2", email: "user2@abcv.com", fullname: "A2"};
+	var user1 = {userId: 1, username: "user1", email: "user1@abcv.com", fullname: "A1"};
+	var user2 = {userId: 2, username: "user2", email: "user2@abcv.com", fullname: "A2"};
 	
 	listUsers.push(user1);
 	listUsers.push(user2);
@@ -58,6 +64,7 @@ function renderListUsers($domTable) {
 			
 			// process display
 			$rowClone.removeAttr('id');
+			$rowClone.attr('data-userId', user.userId);
 			$rowClone.show();
 			
 			// render data
@@ -65,7 +72,6 @@ function renderListUsers($domTable) {
 			$rowClone.find(".td-username").text(user.username);
 			$rowClone.find(".td-email").text(user.email);
 			$rowClone.find(".td-fullname").text(user.fullname);
-			$rowClone.find(".btn-edit").attr("userId", user.userId);
 			
 			$tbody.append($rowClone);
 		});
@@ -95,6 +101,14 @@ function renderValue4UserForm(userId, $userForm) {
 	$userForm.find("#txtUsername").val(user.username);
 	$userForm.find("#txtEmail").val(user.email);
 	$userForm.find("#txtFullname").val(user.fullname);
+}
+
+
+/**
+*	description: render data for delete form
+*/
+function renderValue4UserDeleteForm(userId, $deleteForm) {
+	$deleteForm.attr("action", "urlDelete?userId=" + userId);
 }
 
 
